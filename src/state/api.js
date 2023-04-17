@@ -12,8 +12,12 @@ export const api = createApi({
                 },
             }),
     reducePath: "adminApi",
-    tagTypes: ["User", "Products", "Customers", "Transactions", "Geography", "Sales", "Admins", "Performance", "Dashboard"],
+    tagTypes: ["User", "AuthUser","Products", "Customers", "Transactions", "Geography", "Sales", "Admins", "Performance", "Dashboard"],
     endpoints: (build) => ({
+        getAuthUser: build.query({ 
+            query: () => `general/authUser`,
+            providesTags: ["AuthUser"]
+        }),
         getUser: build.query({ 
             query: (id) => `general/user/${id}`,
             providesTags: ["User"]
@@ -57,5 +61,5 @@ export const api = createApi({
     })
 })
 
-export const { useGetUserQuery, useGetProductsQuery, useGetCustomersQuery, useGetTransactionsQuery, useGetGeographyQuery,
+export const { useGetUserQuery, useGetAuthUserQuery, useGetProductsQuery, useGetCustomersQuery, useGetTransactionsQuery, useGetGeographyQuery,
     useGetSalesQuery, useGetAdminsQuery, useGetUserPerformanceQuery, useGetDashboardQuery } = api;

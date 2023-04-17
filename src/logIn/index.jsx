@@ -7,6 +7,9 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Alert from '@mui/material/Alert';
 import API_URL from '../config/config';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import { useDispatch } from "react-redux";
+import { fetchUser, setUser } from "../state";
+
 import {
   Box,
   Button,
@@ -21,6 +24,7 @@ import { themeSettings } from "../theme";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // States for registration
   const [email, setEmail] = useState("");
@@ -40,12 +44,12 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const user = {
+  const userCredentials = {
     email,
     password,
   };
 
-  console.log(user);
+  // console.log(user);
   // Handling the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,7 +66,7 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(userCredentials),
       });
       const data = await response.json();
       console.log(data);
@@ -72,8 +76,10 @@ const Login = () => {
       } else {
         setError(false);
         console.log("loggedIn");
-        localStorage.setItem("DashBoardUserLoggedIn", true);
-        localStorage.setItem("DashBoardUser", JSON.stringify(data));
+         dispatch(setUser(data));
+
+        // localStorage.setItem("DashBoardUserLoggedIn", true);
+        // localStorage.setItem("DashBoardUser", JSON.stringify(data));
         navigate("/dashboard");
       }
     }

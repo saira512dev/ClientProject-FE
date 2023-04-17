@@ -10,11 +10,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import { useDispatch  } from "react-redux";
-import { setMode } from "../state";
+import { setMode, setUser } from "../state";
 import profileImage from "../assets/profile.png";
 import { AppBar, useTheme, Toolbar, IconButton, InputBase, Button,Box, Typography, Menu, MenuItem, useMediaQuery,
 } from "@mui/material"
 import API_URL from '../config/config'
+import {fetchUser} from "../state"
 
 const Navbar = ({
     isSidebarOpen,
@@ -39,6 +40,7 @@ const Navbar = ({
             "Content-Type": "application/json",
             },
         });
+        dispatch(setUser(""))
         localStorage.removeItem("DashBoardUser");
         localStorage.removeItem("DashBoardUserLoggedIn");
         navigate("/");

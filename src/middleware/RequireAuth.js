@@ -1,9 +1,14 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {fetchUser} from "../state"
 
 function RequireAuth({ Component }) {
-  console.log(localStorage.getItem("DashBoardUserLoggedIn"))
-  if (!localStorage.getItem("DashBoardUserLoggedIn")) {
+  // const dispatch = useDispatch()
+  // dispatch(fetchUser())
+  const user = useSelector((state) => state.global.user);
+  console.log(user+"RQ")
+  if (!user) {
     return <Navigate to="/" />;
   }
   return <Component />;

@@ -1,7 +1,7 @@
 import  { CssBaseline, ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useMemo, useEffect } from "react";
+import { connect,useSelector, useDispatch } from "react-redux";
 import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import { themeSettings } from "./theme";
 import  Dashboard  from "./scenes/dashboard";
@@ -20,10 +20,15 @@ import  Admin from "./scenes/admin";
 import  Performance from "./scenes/performance";
 import RequireAuth from "./middleware/RequireAuth";
 import RedirectIfAuthenticated from "./middleware/RedirectIfAuthenticated";
+import { useGetAuthUserQuery } from "./state/api";
+import { fetchUser, setUser } from "./state";
 
-function App() {
+function App ()  {
   const mode = useSelector((state) => state.global.mode)
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode])
+  const dispatch = useDispatch();
+  dispatch(fetchUser());
+
   return <div className="app">
     <BrowserRouter>
       <ThemeProvider theme={theme}>
