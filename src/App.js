@@ -26,15 +26,13 @@ import { fetchUser, setUser } from "./state";
 function App ()  {
   const mode = useSelector((state) => state.global.mode)
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode])
-  const dispatch = useDispatch();
-  dispatch(fetchUser());
-
+  
   return <div className="app">
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Routes >
-          <Route path="/" element={<RedirectIfAuthenticated Component={LogIn} />} />
+          <Route path="/" element={<RedirectIfAuthenticated  Component={LogIn} />} />
           <Route path="/signup" element={<RedirectIfAuthenticated Component={SignUp} />} />
           <Route element={<RequireAuth Component={Layout} />}>
             <Route path="/dashboard" element={< Dashboard />} />
@@ -55,5 +53,6 @@ function App ()  {
     
   </div>
 }
+
 
 export default App;

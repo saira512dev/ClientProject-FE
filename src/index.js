@@ -7,6 +7,7 @@ import globalReducer from "./state"
 import { Provider } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { api } from "./state/api";
+import RedirectIfAuthenticated from './middleware/RedirectIfAuthenticated';
 
 const store = configureStore({
   reducer: {

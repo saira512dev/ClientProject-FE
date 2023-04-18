@@ -40,9 +40,7 @@ const Navbar = ({
             "Content-Type": "application/json",
             },
         });
-        dispatch(setUser(""))
-        localStorage.removeItem("DashBoardUser");
-        localStorage.removeItem("DashBoardUserLoggedIn");
+        dispatch(setUser(null))
         navigate("/");
     };
     

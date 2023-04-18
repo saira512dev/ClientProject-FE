@@ -13,7 +13,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { City, Country, State } from "country-state-city";
 import { useDispatch } from "react-redux";
-import { setUser } from "../state";
+import { fetchUser,setUser } from "../state";
 
 import {
   Box,
@@ -144,8 +144,6 @@ const Signup = () => {
         setError(false);
         console.log("loggedIn");
         dispatch(setUser(data));
-        localStorage.setItem("DashBoardUserLoggedIn", true);
-        localStorage.setItem("DashBoardUser", JSON.stringify(data));
         navigate("/dashboard");
      }
     }

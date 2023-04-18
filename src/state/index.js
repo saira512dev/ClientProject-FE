@@ -1,19 +1,11 @@
 
 import { configureStore } from '@reduxjs/toolkit';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { useGetAuthUserQuery } from "./api";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   mode: 'dark',
-  user: null,
-  status: 'idle',
-  error: null
+  user: JSON.parse(localStorage.getItem('user')),
 };
-
-export const fetchUser = createAsyncThunk('global/fetchUser', async () => {
-  const res = await useGetAuthUserQuery();
-  return res.currentData;
-});
 
 export const globalSlice = createSlice({
   name: 'global',
@@ -23,22 +15,9 @@ export const globalSlice = createSlice({
       state.mode = state.mode === 'light' ? 'dark' : 'light';
     },
     setUser: (state, data) => {
-        state.user = data.payload;
+        localStorage.setItem("user",data == null ? null : JSON.stringify(data.payload ))
+        state.user = data = null ? null : data.payload;
       },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchUser.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchUser.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.user = action.payload;
-      })
-      .addCase(fetchUser.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      });
   },
 });
 
