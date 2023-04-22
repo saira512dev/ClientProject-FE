@@ -77,9 +77,6 @@ const Login = () => {
         setError(false);
         console.log("loggedIn");
          dispatch(setUser(data));
-
-        // localStorage.setItem("DashBoardUserLoggedIn", true);
-        // localStorage.setItem("DashBoardUser", JSON.stringify(data));
         navigate("/dashboard");
       }
     }
