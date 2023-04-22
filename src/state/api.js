@@ -46,6 +46,14 @@ export const api = createApi({
             query: () => "sales/sales",
             providesTags: [ "Sales" ]
         }),
+        getSearchSales: build.query({ 
+            query: (searchString) => ({
+                url: `sales/searchSales/`,
+                method: "GET",
+                params: {searchString: JSON.stringify(searchString)}
+            }),
+            providesTags: [ "SalesSearch" ],
+        }),
         getAdmins: build.query({ 
             query: () => "management/admins",
             providesTags: ["Admins"]
@@ -62,4 +70,4 @@ export const api = createApi({
 })
 
 export const { useGetUserQuery, useGetAuthUserQuery, useGetProductsQuery, useGetCustomersQuery, useGetTransactionsQuery, useGetGeographyQuery,
-    useGetSalesQuery, useGetAdminsQuery, useGetUserPerformanceQuery, useGetDashboardQuery } = api;
+    useGetSalesQuery, useGetSearchSalesQuery, useGetAdminsQuery, useGetUserPerformanceQuery, useGetDashboardQuery } = api;
