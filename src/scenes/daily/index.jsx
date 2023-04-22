@@ -1,57 +1,106 @@
-import React, { useMemo, useState } from "react";
-import { Box, useTheme } from "@mui/material";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
+import { Box, useTheme, Typography } from "@mui/material";
 import Header from "../../components/Header";
 import { ResponsiveLine } from "@nivo/line";
-import { useGetSalesQuery } from "../../state/api";
+import { useGetSalesQuery, useGetSearchSalesQuery } from "../../state/api";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import SearchBar from "../../components/SearchBar";
+import { useSelector } from 'react-redux';
+
 
 const Daily = () => {
   const [startDate, setStartDate] = useState(new Date("2021-02-01"));
-  const [endDate, setEndDate] = useState(new Date("2021-03-01"));
+  const [endDate, setEndDate] = useState(new Date("2021-10-01"));
+  const [searchQuery, setSearchQuery] = useState("");
+  const [salesData, setSalesData] = useState();
+  const [errorMessage, setErrorMessage] = useState("")
   const { data } = useGetSalesQuery();
+  const  responseinfo = useGetSearchSalesQuery(
+    { searchQuery },
+    { refetchOnMountOrArgChange: true }
+  );
+  
   const theme = useTheme();
 
-  const [formattedData] = useMemo(() => {
-    if (!data) return [];
+  const handleSearchQuery = useCallback(async (e) => {
+    if (e.code === "Enter") {
+      setSearchQuery(e.target.value);
+    }
+    if (
+      responseinfo &&
+      responseinfo.status == "rejected" 
+    ) {
+      setSalesData(null);
+    } 
+    console.log(responseinfo);
+  }, []);
 
-    const { dailyData } = data;
-    const totalSalesLine = {
-      id: "totalSales",
+  useEffect(() => {
+    if (
+      responseinfo &&
+      responseinfo.status == "rejected" && searchQuery
+    ) {
+      setErrorMessage("NO RESULTS AVAILABLE")
+      setSalesData(null);
+    } 
+   
+    console.log(responseinfo)
+    if (
+      responseinfo &&
+      responseinfo.status == "fulfilled"
+    ) {
+      setErrorMessage("")
+      setSalesData(responseinfo.data);
+    }
+  }, [responseinfo]);
+
+  useEffect(() => {
+    console.log(data)
+      setSalesData(data);
+     
+  }, [data]);
+
+  const [formattedData] = useMemo(() => {
+    if (!salesData ) return [];
+    console.log("USEMEMO")
+    console.log(salesData)
+    const dailyData = salesData.data  ? salesData.data : salesData[0]
+    if (!dailyData ) return [];
+    console.log(dailyData)
+    const totalSearchLine = {
+      id: "totalSearch",
       color: theme.palette.secondary.main,
       data: [],
     };
-    const totalUnitsLine = {
-      id: "totalUnits",
-      color: theme.palette.secondary[600],
-      data: [],
-    };
-
-    Object.values(dailyData).forEach(({ date, totalSales, totalUnits }) => {
-      const dateFormatted = new Date(date);
+  
+    // console.log(dailyData.monthlySearches)
+    Object.values(dailyData.monthlySearches).forEach(({ year, month, search_volume }) => {
+      console.log("PREPARING")
+      const dateFormatted = new Date(year, month - 1, 1,0,0,0);
       if (dateFormatted >= startDate && dateFormatted <= endDate) {
-        const splitDate = date.substring(date.indexOf("-") + 1);
-
-        totalSalesLine.data = [
-          ...totalSalesLine.data,
-          { x: splitDate, y: totalSales },
-        ];
-        totalUnitsLine.data = [
-          ...totalUnitsLine.data,
-          { x: splitDate, y: totalUnits },
+        const splitDate = `${year.toString().split(-2)}-${month < 10 ? '0'+ month : month}`
+  
+        totalSearchLine.data = [
+          ...totalSearchLine.data,
+          { x: splitDate, y: search_volume },
         ];
       }
     });
-
-    const formattedData = [totalSalesLine, totalUnitsLine];
+  
+    // console.log(totalSalesLine.data+"data")
+    const formattedData = [totalSearchLine];
     return [formattedData];
-  }, [data, startDate, endDate]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [salesData, startDate, endDate]);
 
+  console.log("salesData:", salesData);
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="DAILY SALES" subtitle="Chart of daily sales" />
+      <Header title="DAILY QUERY" subtitle="Chart of daily query" />
+      <SearchBar handleSearchQuery={handleSearchQuery}/>
+
       <Box height="75vh">
-        <Box display="flex" justifyContent="flex-end">
+      { salesData && formattedData && <Box mt="2rem" display="flex" justifyContent="flex-end">
           <Box>
             <DatePicker
               selected={startDate}
@@ -71,9 +120,13 @@ const Daily = () => {
               minDate={startDate}
             />
           </Box>
+        </Box>}
+        <Box>
+          <Typography variant="h4" mt="0.3rem" sx={{ color:`${theme.palette.secondary[100]}`}}>
+              {errorMessage}
+      </Typography>
         </Box>
-
-        {data ? (
+        {salesData && formattedData &&(
           <ResponsiveLine
             data={formattedData}
             theme={{
@@ -137,7 +190,7 @@ const Daily = () => {
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
-              legend: "Total",
+              legend: "Search_Volume",
               legendOffset: -50,
               legendPosition: "middle",
             }}
@@ -176,10 +229,29 @@ const Daily = () => {
               },
             ]}
           />
-        ) : (
-          <>Loading...</>
-        )}
-      </Box>
+        ) }
+        
+      </Box> 
+      {salesData && formattedData && <Box mt="2rem" mb="2rem" sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column"
+
+      }}>
+      <Typography variant="h4" mt="0.3rem" sx={{ color:`${theme.palette.secondary[100]}`}}>
+        COMPETITION LEVEL:
+        {salesData.data ? salesData.data.competitionLevel : salesData[0].competitionLevel }
+      </Typography>
+      <Typography variant="h4" mt="0.3rem" sx={{ color:`${theme.palette.secondary[100]}`}}>
+        COMPETITION :
+        {salesData.data ? salesData.data.competition : salesData[0].competition }
+      </Typography>
+      <Typography variant="h4" mt="0.3rem" sx={{ color:`${theme.palette.secondary[100]}`}}>
+        CPC:
+        {salesData.data ? salesData.data.cpc : salesData[0].cpc }
+      </Typography>
+        </Box>} 
     </Box>
   );
 };
