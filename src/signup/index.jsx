@@ -90,16 +90,13 @@ const Signup = () => {
 
   const handleStateChange = (e) => {
     setCities(City.getCitiesOfState(selectedCountry, e.target.value))
-    // console.log(cities)
     setSelectedState(e.target.value)
   };
 
   const handleCityChange = (e) => {
     setSelectedCity(e.target.value)
-    // console.log(selectedCountry, selectedState, selectedCity)
   };
 
-//   console.log(user);
   // Handling the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
