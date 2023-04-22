@@ -5,7 +5,6 @@ import { useGetAuthUserQuery } from "../state/api";
 
 function RedirectIfAuthenticated({ Component }) {
   const user = useSelector((state) => state.global.user);
-  console.log(user)
   if (user && user._id) {
     return <Navigate to="/dashboard" />;
   }

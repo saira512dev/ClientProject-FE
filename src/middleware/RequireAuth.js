@@ -4,8 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 function RequireAuth({ Component }) {
   const user = useSelector((state) => state.global.user);
-  console.log(user+"RQ")
-  if (user == null) {
+  if (!user) {
     return <Navigate to="/" />;
   }
   return <Component />;
