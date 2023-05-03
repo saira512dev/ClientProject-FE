@@ -7,6 +7,17 @@
     font-family: "Inter", sans-serif;
   }
 
+  @media screen and (max-width: 768px) {
+    .query_input_elements{
+      flex-direction: column;
+    }
+
+    .query_input_elements > * {
+      width: 15rem;
+    }
+  }
+  
+
 /*   
   .MuiInputBase-root  {
     background: #21295c !important;

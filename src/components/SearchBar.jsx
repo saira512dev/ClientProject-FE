@@ -4,7 +4,7 @@ import Input from '@mui/material/Input';
 
 const SearchBar = ({handleSearchQuery} ) => {
     return (
-        <div>
+        <div className="searchBar" display="flex" >
             <Input  onKeyPress={handleSearchQuery} />
             <SearchIcon />
         </div>

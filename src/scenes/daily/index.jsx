@@ -125,7 +125,7 @@ const Daily = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="DAILY QUERY" subtitle="Chart of daily query" />
-      <Box mb="1rem" display="flex" flex-wrap="wrap" gap="1rem">
+      <Box className="query_input_elements" mb="1rem" display="flex" justifyContent="flex-start" gap="1rem">
         <SearchBar mb="0.5rem" handleSearchQuery={handleSearchQuery}/>
         <Box>
         {/* <InputLabel variant="standard" htmlFor="country">
