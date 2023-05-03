@@ -2,12 +2,13 @@ import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { Box, useTheme, Typography } from "@mui/material";
 import Header from "../../components/Header";
 import { ResponsiveLine } from "@nivo/line";
-import { useGetSalesQuery, useGetSearchSalesQuery } from "../../state/api";
+import { useGetSalesQuery, useGetSearchSalesQuery, useGetLocationAndLanguagesQuery } from "../../state/api";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import SearchBar from "../../components/SearchBar";
-import { useSelector } from 'react-redux';
-
+// import { useSelector } from 'react-redux';
+import InputLabel from "@mui/material/InputLabel";
+import NativeSelect from "@mui/material/NativeSelect";
 
 const Daily = () => {
   const [startDate, setStartDate] = useState(new Date("2021-02-01"));
@@ -15,7 +16,12 @@ const Daily = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [salesData, setSalesData] = useState();
   const [errorMessage, setErrorMessage] = useState("")
+  const [country, setCountry] = useState("")
+  const [language, setLanguage] = useState("")
+  const [languages, setLanguages] = useState([])
   const { data } = useGetSalesQuery();
+  const countries = useGetLocationAndLanguagesQuery().data || [];
+  // console.log(data)
   const  responseinfo = useGetSearchSalesQuery(
     { searchQuery },
     { refetchOnMountOrArgChange: true }
@@ -23,9 +29,27 @@ const Daily = () => {
   
   const theme = useTheme();
 
+  const handleCountryChange = (e) => {
+    console.log(e.target.value)
+    // setCountry("")
+    const selectedCountry = countries.find(country => country.location_code == e.target.value)
+    const languagesOfSelectedCountry = selectedCountry.available_languages
+    setCountry(selectedCountry.location_code)
+    setLanguages(languagesOfSelectedCountry)
+    console.log(country)
+  };
+
+  const handleLanguageChanges = (e) => {
+    console.log("HAI")
+    console.log(e.target.value)
+    setLanguage(e.target.value)
+  };
+
   const handleSearchQuery = useCallback(async (e) => {
     if (e.code === "Enter") {
-      setSearchQuery(e.target.value);
+      setSearchQuery({query: e.target.value,country, language});
+      setCountry("")
+      setLanguage("")
     }
     if (
       responseinfo &&
@@ -34,7 +58,9 @@ const Daily = () => {
       setSalesData(null);
     } 
     console.log(responseinfo);
-  }, []);
+    console.log(country, language)
+
+  });
 
   useEffect(() => {
     if (
@@ -44,7 +70,7 @@ const Daily = () => {
       setErrorMessage("NO RESULTS AVAILABLE")
       setSalesData(null);
     } 
-   
+    
     console.log(responseinfo)
     if (
       responseinfo &&
@@ -53,6 +79,8 @@ const Daily = () => {
       setErrorMessage("")
       setSalesData(responseinfo.data);
     }
+    
+
   }, [responseinfo]);
 
   useEffect(() => {
@@ -97,7 +125,64 @@ const Daily = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="DAILY QUERY" subtitle="Chart of daily query" />
-      <SearchBar handleSearchQuery={handleSearchQuery}/>
+      <Box mb="1rem" display="flex" flex-wrap="wrap" gap="1rem">
+        <SearchBar mb="0.5rem" handleSearchQuery={handleSearchQuery}/>
+        <Box>
+        {/* <InputLabel variant="standard" htmlFor="country">
+                  Country
+                </InputLabel> */}
+                <NativeSelect
+                  required
+                  fullWidth
+                  onChange={handleCountryChange}
+                  defaultValue={30}
+                  inputProps={{
+                    name: "country",
+                    id: "country",
+                  }}
+                  sx={{ bg: theme.palette.background.alt }}
+                >
+                  <option  value="">
+                    Country
+                  </option>
+                  {countries.map((country) => {
+                    return (
+                      <option key={country.location_code} value={country.location_code}>
+                        {country.location_name}
+                      </option>
+                    );
+                  })}
+                </NativeSelect>
+        </Box>
+        { country && <Box>
+        {/* <InputLabel variant="standard" htmlFor="language">
+                  Language
+                </InputLabel> */}
+                <NativeSelect
+                  required
+                  fullWidth
+                  defaultValue={10}
+                  onChange={handleLanguageChanges}
+                  inputProps={{
+                    name: "language",
+                    id: "language",
+                  }}
+                  sx={{ bg: theme.palette.background.alt }}
+                >
+                  <option value="">
+                    Language
+                  </option>
+                  {languages.map((language) => {
+                    console.log(language)
+                    return (
+                      <option key={language.language_code} value={language.language_code}>
+                        {language.language_name}
+                      </option>
+                    );
+                  })}
+                </NativeSelect>
+        </Box>}
+      </Box>
 
       <Box height="75vh">
       { salesData && formattedData && <Box mt="2rem" display="flex" justifyContent="flex-end">
