@@ -18,6 +18,10 @@ export const api = createApi({
             query: () => `general/authUser`,
             providesTags: ["AuthUser"]
         }),
+        getLocationAndLanguages: build.query({ 
+            query: () => `general/locationAndLanguages`,
+            providesTags: ["LocationAndLanguages"]
+        }),
         getUser: build.query({ 
             query: (id) => `general/user/${id}`,
             providesTags: ["User"]
@@ -69,5 +73,5 @@ export const api = createApi({
     })
 })
 
-export const { useGetUserQuery, useGetAuthUserQuery, useGetProductsQuery, useGetCustomersQuery, useGetTransactionsQuery, useGetGeographyQuery,
+export const { useGetUserQuery, useGetLocationAndLanguagesQuery, useGetAuthUserQuery, useGetProductsQuery, useGetCustomersQuery, useGetTransactionsQuery, useGetGeographyQuery,
     useGetSalesQuery, useGetSearchSalesQuery, useGetAdminsQuery, useGetUserPerformanceQuery, useGetDashboardQuery } = api;
