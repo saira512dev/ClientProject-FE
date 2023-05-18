@@ -25,8 +25,10 @@ import { SettingsOutlined,
     CalendarMonthOutlined,
     AdminPanelSettingsOutlined,
     TrendingUpOutlined,
-    PieChartOutlined }
+    PieChartOutlined 
+}
 from '@mui/icons-material';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import { useEffect, useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import FlexBetween from './FlexBetween';
@@ -68,6 +70,10 @@ const navItems = [
     {
         text: "Daily",
         icon: <TodayOutlined />
+    },
+    {
+        text: "Shopping Ads",
+        icon: <ShoppingBasketIcon />
     },
     {
         text: "Monthly",
@@ -152,7 +158,7 @@ const Sidebar = ({
                              )
                          }
 
-                         const lcText = text.toLowerCase()
+                         const lcText = text.split('').filter(char => char !== " ").join('').toLowerCase()
 
                          return (
                              <ListItem key={text} disablePadding>

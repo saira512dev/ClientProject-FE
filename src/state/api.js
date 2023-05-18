@@ -12,7 +12,7 @@ export const api = createApi({
                 },
             }),
     reducePath: "adminApi",
-    tagTypes: ["User", "AuthUser","Products", "Customers", "Transactions", "Geography", "Sales", "Admins", "Performance", "Dashboard"],
+    tagTypes: ["User", "AuthUser","Products", "Customers", "Transactions", "Geography", "Sales", "Admins", "Performance", "Dashboard", "ProductsSearch"],
     endpoints: (build) => ({
         getAuthUser: build.query({ 
             query: () => `general/authUser`,
@@ -29,6 +29,14 @@ export const api = createApi({
         getProducts: build.query({ 
             query: () => "client/products",
             providesTags: ["Products"]
+        }),
+        getSearchProducts: build.query({ 
+            query: (searchString) => ({
+                url: `sales/searchProducts/`,
+                method: "GET",
+                params: {searchString: JSON.stringify(searchString)}
+            }),
+            providesTags: [ "ProductsSearch" ],
         }),
         getCustomers: build.query({ 
             query: () => "client/customers",
@@ -74,4 +82,4 @@ export const api = createApi({
 })
 
 export const { useGetUserQuery, useGetLocationAndLanguagesQuery, useGetAuthUserQuery, useGetProductsQuery, useGetCustomersQuery, useGetTransactionsQuery, useGetGeographyQuery,
-    useGetSalesQuery, useGetSearchSalesQuery, useGetAdminsQuery, useGetUserPerformanceQuery, useGetDashboardQuery } = api;
+    useGetSalesQuery, useGetSearchSalesQuery, useGetSearchProductsQuery, useGetAdminsQuery, useGetUserPerformanceQuery, useGetDashboardQuery } = api;
