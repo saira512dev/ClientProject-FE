@@ -103,7 +103,13 @@ const Daily = () => {
     };
   
     // console.log(dailyData.monthlySearches)
-    Object.values(dailyData.monthlySearches).forEach(({ year, month, search_volume }) => {
+    
+    Object.values(dailyData.monthlySearches).sort((a, b) => {
+      if (a.year === b.year) {
+        return a.month - b.month;
+      }
+      return a.year - b.year;
+    }).forEach(({ year, month, search_volume }) => {
       console.log("PREPARING")
       const dateFormatted = new Date(year, month - 1, 1,0,0,0);
       if (dateFormatted >= startDate && dateFormatted <= endDate) {
@@ -249,13 +255,16 @@ const Daily = () => {
             }}
             colors={{ datum: "color" }}
             margin={{ top: 50, right: 50, bottom: 70, left: 60 }}
-            xScale={{ type: "point" }}
+            xScale={{
+              type: "point",
+              reverse: false, // Set reverse to false for ascending order
+            }}
             yScale={{
-              type: "linear",
-              min: "auto",
-              max: "auto",
-              stacked: false,
-              reverse: false,
+            type: "linear",
+            min: "auto",
+            max: "auto",
+            stacked: false,
+            reverse: false,
             }}
             yFormat=" >-.2f"
             curve="catmullRom"
