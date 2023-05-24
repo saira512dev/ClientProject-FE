@@ -20,19 +20,15 @@ import SearchBar from "../../components/SearchBar";
 import NativeSelect from "@mui/material/NativeSelect";
 
 const ProductImageLinks = ({ links }) => {
-  
   return (
     <div>
       {links.map((link, index) => (
-        <Typography
-        mb="0.5rem"
-        sx={{ fontSize: 14 }}
-        gutterBottom
-      >
-        <a mb="0.5rem" key={index} href={link}>
-          {link}
-        </a>
-        </Typography>
+        <img
+          key={index}
+          src={link}
+          alt={`Pic-${index + 1}`}
+          style={{ marginBottom: "0.5rem", width: "200px", height: "200px" }}
+        />
       ))}
     </div>
   );
