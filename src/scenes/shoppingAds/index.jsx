@@ -114,6 +114,7 @@ const Product = ({
 
 const Products = () => {
   const userId = useSelector((state) => state.global.user._id);
+  console.log("USERID FROMTEND", userId)
   const [searchQuery, setSearchQuery] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [productsData, setProductsData] = useState("");
