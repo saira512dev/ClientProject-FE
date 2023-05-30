@@ -36,7 +36,7 @@ export const api = createApi({
             query: (searchString) => ({
                 url: `sales/searchProducts/`,
                 method: "GET",
-                params: {searchString: JSON.stringify(searchString)}
+                params: {searchString: JSON.stringify(searchString), userId}
             }),
             providesTags: [ "ProductsSearch" ],
         }),
@@ -65,9 +65,12 @@ export const api = createApi({
             providesTags: ["Geography"]
         }),
         getSales: build.query({ 
-            query: () => "sales/sales",
+            query: () => ({
+                url:  "sales/sales",
+                method: 'GET',
+                params: {userId}
+            }),
             providesTags: [ "Sales" ],
-            params: {userId: JSON.stringify(userId)}
         }),
         getSearchSales: build.query({ 
             query: (searchString) => ({
