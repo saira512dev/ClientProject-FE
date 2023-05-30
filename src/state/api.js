@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const userJSON = localStorage.getItem('user');
 let userId = null;
 
-if (userJSON !== "null" || !userJSON) {
+if (userJSON !== "null" || userJSON) {
   const user = JSON.parse(userJSON);
   userId = user._id;
 }
