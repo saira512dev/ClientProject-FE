@@ -120,7 +120,7 @@ const Products = () => {
   const [country, setCountry] = useState("");
   const [language, setLanguage] = useState("");
   const [languages, setLanguages] = useState([]);
-  const { data, isLoading } = useGetProductsQuery();
+  const { data, isLoading } = useGetProductsQuery(userId);
   const countries = useGetLocationAndLanguagesQuery().data || [];
   const isNonMobile = useMediaQuery("(min-width: 1000px)");
   console.log(data);
