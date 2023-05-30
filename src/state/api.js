@@ -1,7 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const userJSON = localStorage.getItem('user');
-const userId = JSON.parse(userJSON)._id;
+let userId = null;
+
+if (userJSON !== "null") {
+  const user = JSON.parse(userJSON);
+  userId = user._id;
+}
+
 
 export const api = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_BASE_URL}`,
