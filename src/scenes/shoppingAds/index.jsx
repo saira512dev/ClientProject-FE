@@ -18,6 +18,7 @@ import {
 } from "../../state/api";
 import SearchBar from "../../components/SearchBar";
 import NativeSelect from "@mui/material/NativeSelect";
+import { useSelector } from "react-redux";
 
 const ProductImageLinks = ({ links }) => {
   return (
@@ -112,6 +113,7 @@ const Product = ({
 };
 
 const Products = () => {
+  const userId = useSelector((state) => state.global.user._id);
   const [searchQuery, setSearchQuery] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [productsData, setProductsData] = useState("");
@@ -123,7 +125,7 @@ const Products = () => {
   const isNonMobile = useMediaQuery("(min-width: 1000px)");
   console.log(data);
   const responseinfo = useGetSearchProductsQuery(
-    { searchQuery },
+    { searchQuery, userId },
     { refetchOnMountOrArgChange: true }
   );
 

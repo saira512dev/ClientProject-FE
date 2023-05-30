@@ -9,8 +9,11 @@ import SearchBar from "../../components/SearchBar";
 // import { useSelector } from 'react-redux';
 import InputLabel from "@mui/material/InputLabel";
 import NativeSelect from "@mui/material/NativeSelect";
+import { useSelector } from "react-redux";
 
 const Daily = () => {
+  const userId = useSelector((state) => state.global.user._id);
+  console.log("USERID", userId);
   const [startDate, setStartDate] = useState(new Date("2021-02-01"));
   const [endDate, setEndDate] = useState(new Date("2021-10-01"));
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,11 +22,11 @@ const Daily = () => {
   const [country, setCountry] = useState("")
   const [language, setLanguage] = useState("")
   const [languages, setLanguages] = useState([])
-  const { data } = useGetSalesQuery();
+  const { data } = useGetSalesQuery(userId);
   const countries = useGetLocationAndLanguagesQuery().data || [];
   // console.log(data)
   const  responseinfo = useGetSearchSalesQuery(
-    { searchQuery },
+    { searchQuery, userId },
     { refetchOnMountOrArgChange: true }
   );
   

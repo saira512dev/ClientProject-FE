@@ -1,14 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const userJSON = localStorage.getItem('user');
-let userId = null;
-
-if (userJSON !== "null" || userJSON) {
-  const user = JSON.parse(userJSON);
-  userId = user._id;
-}
-
-
 export const api = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_BASE_URL}`,
                 credentials: "include",
@@ -39,7 +30,7 @@ export const api = createApi({
             providesTags: ["Products"]
         }),
         getSearchProducts: build.query({ 
-            query: (searchString) => ({
+            query: (searchString, userId) => ({
                 url: `sales/searchProducts/`,
                 method: "GET",
                 params: {searchString: JSON.stringify(searchString), userId}
@@ -71,7 +62,7 @@ export const api = createApi({
             providesTags: ["Geography"]
         }),
         getSales: build.query({ 
-            query: () => ({
+            query: (userId) => ({
                 url:  "sales/sales",
                 method: 'GET',
                 params: {userId}
@@ -79,7 +70,7 @@ export const api = createApi({
             providesTags: [ "Sales" ],
         }),
         getSearchSales: build.query({ 
-            query: (searchString) => ({
+            query: (searchString, userId) => ({
                 url: `sales/searchSales/`,
                 method: "GET",
                 params: {searchString: JSON.stringify(searchString), userId}
