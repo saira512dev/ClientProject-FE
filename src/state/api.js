@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const userJSON = localStorage.getItem('user');
+const userId = JSON.parse(userJSON)._id;
 
 export const api = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_BASE_URL}`,
@@ -12,7 +14,7 @@ export const api = createApi({
                 },
             }),
     reducePath: "adminApi",
-    tagTypes: ["User", "AuthUser","Products", "Customers", "Transactions", "Geography", "Sales", "Admins", "Performance", "Dashboard", "ProductsSearch"],
+    tagTypes: ["User", "AuthUser","Products", "Customers", "Transactions", "Backlinks", "Geography", "Sales", "Admins", "Performance", "Dashboard", "ProductsSearch"],
     endpoints: (build) => ({
         getAuthUser: build.query({ 
             query: () => `general/authUser`,
@@ -50,19 +52,28 @@ export const api = createApi({
             }),
             providesTags: ["Transactions"]
         }),
+        getBacklinks: build.query({ 
+            query: ({ page, pageSize, sort, search }) => ({
+                url:"client/backlinks",
+                method: "GET",
+                params: { page, pageSize, sort, search},
+            }),
+            providesTags: ["Backlinks"]
+        }),
         getGeography: build.query({ 
             query: () => "client/geography",
             providesTags: ["Geography"]
         }),
         getSales: build.query({ 
             query: () => "sales/sales",
-            providesTags: [ "Sales" ]
+            providesTags: [ "Sales" ],
+            params: {userId: JSON.stringify(userId)}
         }),
         getSearchSales: build.query({ 
             query: (searchString) => ({
                 url: `sales/searchSales/`,
                 method: "GET",
-                params: {searchString: JSON.stringify(searchString)}
+                params: {searchString: JSON.stringify(searchString), userId}
             }),
             providesTags: [ "SalesSearch" ],
         }),
@@ -81,5 +92,5 @@ export const api = createApi({
     })
 })
 
-export const { useGetUserQuery, useGetLocationAndLanguagesQuery, useGetAuthUserQuery, useGetProductsQuery, useGetCustomersQuery, useGetTransactionsQuery, useGetGeographyQuery,
+export const { useGetUserQuery, useGetBacklinksQuery, useGetLocationAndLanguagesQuery, useGetAuthUserQuery, useGetProductsQuery, useGetCustomersQuery, useGetTransactionsQuery, useGetGeographyQuery,
     useGetSalesQuery, useGetSearchSalesQuery, useGetSearchProductsQuery, useGetAdminsQuery, useGetUserPerformanceQuery, useGetDashboardQuery } = api;
